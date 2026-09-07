@@ -1,0 +1,185 @@
+.animal-secret {
+  position: relative;
+  margin-top: 10px;
+}
+.secret-paw {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #85738b;
+  cursor: pointer;
+  transform: rotate(-15deg);
+}
+.secret-paw svg {
+  width: 21px;
+  height: 21px;
+}
+.secret-paw:hover,
+.secret-paw[aria-expanded='true'] {
+  background: #eee5ee;
+  color: #594460;
+}
+.secret-paw:focus-visible {
+  outline: 3px solid #765681;
+  outline-offset: 3px;
+}
+.animal-reveal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  margin: 6px 0 12px;
+  border: 1px dashed #c2acc6;
+  border-radius: 18px;
+  background: #faf3f8;
+  color: #493c53;
+  animation: friend-arrives 0.25s ease-out;
+}
+.tiny-animal-art {
+  flex: 0 0 78px;
+  width: 78px;
+  height: 78px;
+}
+.animal-reveal strong {
+  display: block;
+  font-size: 13px;
+}
+.animal-reveal p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 0;
+}
+.animal-reveal small {
+  font-size: 11px;
+  color: #66576d;
+}
+.spotter-caption,
+.backup-illustration {
+  flex-wrap: wrap;
+}
+.spotter-caption > p {
+  flex: 1;
+}
+.spotter-caption .animal-secret,
+.backup-illustration .animal-secret {
+  width: 100%;
+  flex-basis: 100%;
+  order: 1;
+}
+.backup-illustration .animal-reveal strong {
+  font: 600 13px var(--font-sans, sans-serif);
+}
+.day-animal {
+  position: relative;
+  width: min(100%, 380px);
+  margin: 0 auto 20px;
+}
+.day-dog-art {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  height: 215px;
+  margin: auto;
+}
+.royal-caption {
+  display: block;
+  margin: 10px auto 0;
+  max-width: 310px;
+  color: #66576d;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.bark-bubble {
+  position: absolute;
+  top: 0;
+  right: 4%;
+  z-index: 1;
+  background: #f0e5ce;
+  border: 2px solid #67516c;
+  border-radius: 18px 18px 18px 2px;
+  padding: 7px 12px;
+  color: #493c53;
+  font-size: 12px;
+  font-weight: 800;
+  transform: rotate(8deg);
+  animation: tiny-yap 0.25s ease-in-out 2;
+}
+.chihuahua .dog-head {
+  transform-origin: 120px 145px;
+  animation: tiny-yap 0.25s ease-in-out 2;
+}
+.princess {
+  animation: friend-arrives 0.5s ease-out;
+}
+.dog-controls {
+  display: flex;
+  gap: 4px 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.dog-controls .text-button {
+  min-height: 44px;
+  font-size: 11px;
+}
+.animal-settings {
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.animal-settings h2 {
+  font-size: 21px;
+}
+.animal-settings .muted {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.animal-settings .button {
+  flex-shrink: 0;
+}
+@keyframes tiny-yap {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-5deg) translateY(-3px);
+  }
+  70% {
+    transform: rotate(5deg);
+  }
+}
+@keyframes friend-arrives {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .animal-settings {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .animal-reveal {
+    gap: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animal-reveal,
+  .princess,
+  .bark-bubble,
+  .chihuahua .dog-head {
+    animation: none;
+  }
+}

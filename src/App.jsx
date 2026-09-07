@@ -18,6 +18,8 @@ import {
   liftHistory,
 } from './planner.js';
 import { Icon, Spotter, Button, Field, Modal, Message } from './ui.jsx';
+import { AnimalSettings, DayAnimal, EasterEgg } from './animals.jsx';
+import { playBark, prepareBark } from './bark.js';
 import { AnatomyDiagram, MachineIllustration } from './illustrations.js';
 import './professional.css';
 
@@ -72,7 +74,7 @@ function TitleBar() {
     <header className="window-bar">
       <span>
         <span className="status-dot" /> Worlds Simplest Gym{' '}
-        <span className="edition">/ little wins club</span>
+        <span className="edition">/ Narmin’s little wins club</span>
       </span>
       {!document.documentElement.dataset.browser && (
         <div className="window-actions">
@@ -222,7 +224,7 @@ function App() {
 function Onboarding({ onDone }) {
   const [step, setStep] = useState(0),
     [profile, setProfile] = useState({
-      name: '',
+      name: 'Narmin',
       email: '',
       heightCm: 165,
       weightKg: 60,
@@ -436,6 +438,7 @@ function Today({ state, onState, today, onProgress }) {
   }
   async function submit(action) {
     if (lock.current) return;
+    const barkReady = action === 'skip' ? prepareBark() : null;
     lock.current = true;
     setBusy(true);
     setError('');
@@ -499,6 +502,7 @@ function Today({ state, onState, today, onProgress }) {
           );
         }
       }
+      if (action === 'skip') void playBark(barkReady);
       onState(next);
       setConfirm(null);
     } catch (error) {
@@ -556,6 +560,7 @@ function Today({ state, onState, today, onProgress }) {
           <span className="status-dot" /> All changes saved locally
         </span>
       </ScreenHeading>
+      <EasterEgg kind="cat" />
       <Message error>{error}</Message>
       {todayEntry ? (
         <div className="workout-layout">
@@ -563,12 +568,12 @@ function Today({ state, onState, today, onProgress }) {
             <span className="eyebrow">
               {todayEntry.done ? 'WORKOUT IN THE BOOKS' : 'NO GUILT. JUST NEXT TIME.'}
             </span>
-            <Spotter happy={todayEntry.done} />
+            <DayAnimal done={todayEntry.done} name={state.profile.name} />
             <h2>{todayEntry.done ? 'You did the thing.' : 'Your workout can wait.'}</h2>
             <p>
               {todayEntry.done
-                ? 'The bear is impressed. The weights are pretending not to be.'
-                : 'No streak was harmed. Pick things up where you left off.'}
+                ? 'Her Royal Shibaness is delighted. Your workout has been royally approved.'
+                : 'Big opinions. Tiny dog. Your workout will be right here when you’re ready.'}
             </p>
             <div className="recap-stats">
               <div>
@@ -1106,6 +1111,7 @@ function RestTimer({ signal }) {
           Reset
         </button>
       </div>
+      <EasterEgg kind="frog" />
     </section>
   );
 }
@@ -1173,6 +1179,7 @@ function Progress({ state }) {
         </div>
       </div>
       <section className="panel trend-panel">
+        <EasterEgg kind="penguin" />
         <div className="section-row">
           <div>
             <p className="eyebrow">A LITTLE STRONGER</p>
@@ -1345,6 +1352,7 @@ function Program({ state, onState }) {
         ))}
       </div>
       <Schedule schedule={upcoming(state)} />
+      <EasterEgg kind="raccoon" />
       {choice && (
         <Modal title="Switch your workout cycle?" onClose={() => !busy && setChoice(null)}>
           <p>
@@ -1450,6 +1458,7 @@ function Learn() {
             <p className="panel">No dedicated exercise for this muscle in the current library.</p>
           )}
           <div className="spotter-caption">
+            <EasterEgg kind="fox" />
             <Icon name="learn" />
             <p>
               New machine? Its setup instructions are a good first stop. A gym instructor can help
@@ -1542,6 +1551,7 @@ function Settings({ state, onState }) {
         <Message error>{error}</Message>
         <Message>{message}</Message>
       </div>
+      <AnimalSettings />
       <div className="settings-grid">
         <section className="panel settings-card">
           <div className="section-row">
@@ -1596,6 +1606,7 @@ function Settings({ state, onState }) {
             included.
           </p>
           <div className="backup-illustration">
+            <EasterEgg kind="bunny" />
             <Icon name="save" size={50} />
             <span>
               YOUR WORK

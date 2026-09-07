@@ -1,7 +1,7 @@
 {
   "name": "worlds-simplest-gym",
   "productName": "Worlds Simplest Gym",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "type": "module",
   "description": "A local gym planner with workout logging and progression.",
@@ -13,6 +13,7 @@
     "build": "vite build",
     "test": "node --test tests/*.test.mjs",
     "test:ui": "npm run build && node scripts/test-ui.mjs",
+    "test:animals": "npm run build && node scripts/test-animals.mjs",
     "test:a11y": "npm run build && node scripts/test-accessibility.mjs",
     "check": "npm test && npm run build",
     "dist": "npm run check && electron-builder --win nsis"

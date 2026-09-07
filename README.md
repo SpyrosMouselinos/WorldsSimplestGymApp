@@ -26,6 +26,8 @@ For the built desktop app, use `npm run build` then `npm start`. Build a Windows
 
 ## Data and email
 
+Narmin's edition includes six hidden animal friends: tap the little paw prints to find them. Discoveries and the animal sound setting stay on this device (separate from workout backups). Confirming a skipped day plays two soft, locally synthesized Chihuahua yaps; canceling or revisiting a log stays silent. The skip screen has replay and mute controls, also available in Settings. Finishing a workout brings out the Shiba princess. Animal animations respect reduced-motion preferences.
+
 Desktop data lives in the Electron user-data folder, normally `%APPDATA%/Worlds Simplest Gym/gym-state.json`. Each change keeps a previous-state `gym-state.json.backup`. The existing save format is retained. Invalid data is reported rather than silently reset. Close the app before restoring a backup.
 
 Optional email is under **Settings → Optional email**. Enter a Gmail account and a 16-character app password, then Save email settings. Send test saves the current email settings before sending. Credentials are encrypted using Windows credential storage; browser preview never saves email credentials. Connection and send attempts have timeouts. Delivery requires valid account credentials and connectivity.
@@ -36,6 +38,7 @@ Optional email is under **Settings → Optional email**. Enter a Gmail account a
 npm run check
 npm run test:ui
 npm run test:a11y
+npm run test:animals
 npm audit
 ```
 
