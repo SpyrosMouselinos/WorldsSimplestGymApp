@@ -1,13 +1,13 @@
-"use strict";
-const path = require("node:path");
-const electron = require("electron");
-const fs = require("node:fs");
-const nodemailer = require("nodemailer");
+'use strict';
+const path = require('node:path');
+const electron = require('electron');
+const fs = require('node:fs');
+const nodemailer = require('nodemailer');
 function machinesDir() {
   if (electron.app.isPackaged) {
-    return path.join(electron.app.getAppPath(), "dist", "machines");
+    return path.join(electron.app.getAppPath(), 'dist', 'machines');
   }
-  return path.join(__dirname, "../public", "machines");
+  return path.join(__dirname, '../public', 'machines');
 }
 function machinePath(filename) {
   if (typeof filename !== 'string') return null;
@@ -17,13 +17,20 @@ function machinePath(filename) {
   return fs.existsSync(full) && fs.statSync(full).isFile() ? full : null;
 }
 function escapeHtml(value) {
-  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 function buildWorkoutHtml(payload) {
-  const rows = payload.exercises.map((ex) => {
-    const guess = ex.estimated ? ' <em style="color:#7d8d9a">(guess — overwrite in the app)</em>' : "";
-    const replay = ex.replay ? ' <span style="color:#2dd4bf">replay · same weight</span>' : "";
-    return `
+  const rows = payload.exercises
+    .map((ex) => {
+      const guess = ex.estimated
+        ? ' <em style="color:#7d8d9a">(guess — overwrite in the app)</em>'
+        : '';
+      const replay = ex.replay ? ' <span style="color:#2dd4bf">replay · same weight</span>' : '';
+      return `
         <tr>
           <td style="padding:12px 8px;border-bottom:1px solid #1c222b;width:88px;vertical-align:middle">
             <img src="cid:${escapeHtml(ex.id)}" width="72" height="54" alt="${escapeHtml(ex.name)}" style="display:block;border:1px solid #2dd4bf55;background:#14181e" />
@@ -35,7 +42,8 @@ function buildWorkoutHtml(payload) {
             </div>
           </td>
         </tr>`;
-  }).join("");
+    })
+    .join('');
   return `<!doctype html>
 <html>
 <body style="margin:0;background:#080a0c;color:#d7e2ea">
@@ -55,7 +63,7 @@ function buildWorkoutHtml(payload) {
 }
 function transporter(smtp) {
   return nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     requireTLS: true,
@@ -64,17 +72,17 @@ function transporter(smtp) {
     socketTimeout: 30000,
     auth: {
       user: smtp.user,
-      pass: smtp.appPassword
-    }
+      pass: smtp.appPassword,
+    },
   });
 }
 function mailError(error) {
   const message = error instanceof Error ? error.message : String(error);
   if (/invalid login|username and password|eauth/i.test(message)) {
-    return "Gmail rejected the login. Use the Gmail address and a 16-character app password, not your normal password.";
+    return 'Gmail rejected the login. Use the Gmail address and a 16-character app password, not your normal password.';
   }
   if (/enotfound|econnrefused|etimedout|edns/i.test(message)) {
-    return "Could not reach smtp.gmail.com. Check the network, then try again.";
+    return 'Could not reach smtp.gmail.com. Check the network, then try again.';
   }
   return message;
 }
@@ -88,8 +96,8 @@ async function sendWorkoutEmail(smtp, to, payload) {
           filename: ex.image,
           path: file,
           cid: ex.id,
-          contentType: "image/svg+xml"
-        }
+          contentType: 'image/svg+xml',
+        },
       ];
     });
     await transporter(smtp).sendMail({
@@ -97,7 +105,7 @@ async function sendWorkoutEmail(smtp, to, payload) {
       to,
       subject: `Today: ${payload.sessionName}`,
       html: buildWorkoutHtml(payload),
-      attachments
+      attachments,
     });
     return { ok: true };
   } catch (error) {
@@ -109,10 +117,10 @@ async function sendTestEmail(smtp, to) {
     await transporter(smtp).sendMail({
       from: `Worlds Simplest Gym <${smtp.user}>`,
       to,
-      subject: "Worlds Simplest Gym — test",
+      subject: 'Worlds Simplest Gym — test',
       html: `<p style="font-family:Segoe UI,Arial,sans-serif;color:#14181e">
         SMTP works. You can email today's workout from the Today screen.
-      </p>`
+      </p>`,
     });
     return { ok: true };
   } catch (error) {
@@ -120,4 +128,4 @@ async function sendTestEmail(smtp, to) {
   }
 }
 
-module.exports = {sendWorkoutEmail, sendTestEmail};
+module.exports = { sendWorkoutEmail, sendTestEmail };

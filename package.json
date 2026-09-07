@@ -1,7 +1,7 @@
 {
   "name": "worlds-simplest-gym",
   "productName": "Worlds Simplest Gym",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "A local gym planner with workout logging and progression.",
@@ -13,6 +13,7 @@
     "build": "vite build",
     "test": "node --test tests/*.test.mjs",
     "test:ui": "npm run build && node scripts/test-ui.mjs",
+    "test:a11y": "npm run build && node scripts/test-accessibility.mjs",
     "check": "npm test && npm run build",
     "dist": "npm run check && electron-builder --win nsis"
   },
@@ -23,9 +24,11 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.55.0",
     "electron": "^44.2.0",
     "electron-builder": "^26.15.3",
+    "prettier": "^3.9.6",
     "vite": "^8.2.2"
   },
   "build": {
@@ -39,9 +42,11 @@
       "electron/**/*",
       "src/core.js",
       "src/catalog.js",
+      "src/planner.js",
       "package.json"
     ],
     "win": {
+      "icon": "resources/icon.ico",
       "target": "nsis"
     },
     "nsis": {

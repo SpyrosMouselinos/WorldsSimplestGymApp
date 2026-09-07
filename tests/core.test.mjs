@@ -2,15 +2,41 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { emptyState, reduceState, normalizeState } from '../src/core.js';
 import { sessionsFor } from '../src/catalog.js';
-const profile = { name: 'Test', email: '', heightCm: 170, weightKg: 70, gymDays: [1, 3, 5], program: 'couple' };
+const profile = {
+  name: 'Test',
+  email: '',
+  heightCm: 170,
+  weightKg: 70,
+  gymDays: [1, 3, 5],
+  program: 'couple',
+};
 const onboard = () => reduceState(emptyState(), 'onboard', { profile });
 function workout(state, overrides = {}) {
   const session = sessionsFor(state.profile.program)[state.queue.nextIndex % 3];
-  return { sessionId: session.id, results: session.exerciseIds.map(exerciseId => ({ exerciseId, reps: [12, 12, 12], skipped: false, workingKg: 20, ...overrides })) };
+  return {
+    sessionId: session.id,
+    results: session.exerciseIds.map((exerciseId) => ({
+      exerciseId,
+      reps: [12, 12, 12],
+      skipped: false,
+      workingKg: 20,
+      ...overrides,
+    })),
+  };
 }
 test('onboarding validates and seeds all lifts', () => {
   assert.equal(Object.keys(onboard().lifts).length, 16);
-  for (const patch of [{ name: '' }, { weightKg: NaN }, { heightCm: 0 }, { gymDays: [] }, { program: 'bad' }, { email: 'invalid' }]) assert.throws(() => reduceState(emptyState(), 'onboard', { profile: { ...profile, ...patch } }));
+  for (const patch of [
+    { name: '' },
+    { weightKg: NaN },
+    { heightCm: 0 },
+    { gymDays: [] },
+    { program: 'bad' },
+    { email: 'invalid' },
+  ])
+    assert.throws(() =>
+      reduceState(emptyState(), 'onboard', { profile: { ...profile, ...patch } }),
+    );
 });
 test('only complete sets progress and the actual working weight is used', () => {
   const state = onboard();
@@ -21,15 +47,33 @@ test('only complete sets progress and the actual working weight is used', () => 
   assert.equal(next.history[0].results[0].workingKg, 20);
   assert.equal(state.queue.nextIndex, 0);
   assert.equal(next.queue.nextIndex, 1);
-  const partial = reduceState(state, 'complete', workout(state, { reps: [12, 11, 12], workingKg: 21 }), '2026-09-07');
+  const partial = reduceState(
+    state,
+    'complete',
+    workout(state, { reps: [12, 11, 12], workingKg: 21 }),
+    '2026-09-07',
+  );
   assert.equal(partial.lifts['chest-press'].workingKg, 21);
-  const zero = reduceState(state, 'complete', workout(state, { reps: [0, 0, 0], workingKg: 0 }), '2026-09-07');
+  const zero = reduceState(
+    state,
+    'complete',
+    workout(state, { reps: [0, 0, 0], workingKg: 0 }),
+    '2026-09-07',
+  );
   assert.equal(zero.lifts['chest-press'].workingKg, 0);
 });
 test('reject invalid, missing, duplicate and incomplete exercise results atomically', () => {
   const state = onboard();
   const before = structuredClone(state);
-  for (const patch of [{ reps: [] }, { reps: [12] }, { reps: [NaN, 12, 12] }, { reps: [1.5, 12, 12] }, { workingKg: -1 }, { workingKg: Infinity }]) assert.throws(() => reduceState(state, 'complete', workout(state, patch)));
+  for (const patch of [
+    { reps: [] },
+    { reps: [12] },
+    { reps: [NaN, 12, 12] },
+    { reps: [1.5, 12, 12] },
+    { workingKg: -1 },
+    { workingKg: Infinity },
+  ])
+    assert.throws(() => reduceState(state, 'complete', workout(state, patch)));
   const payload = workout(state);
   payload.results[0] = payload.results[1];
   assert.throws(() => reduceState(state, 'complete', payload));
@@ -78,8 +122,14 @@ test('weights, SMTP settings and corrupted saves are validated', () => {
   const state = onboard();
   assert.throws(() => reduceState(state, 'lift', { exerciseId: 'bad', workingKg: 20 }));
   assert.throws(() => reduceState(state, 'lift', { exerciseId: 'chest-press', workingKg: -20 }));
-  assert.throws(() => reduceState(state, 'smtp', { user: 'test@example.com', appPassword: 'short' }));
-  assert.equal(reduceState(state, 'smtp', { user: 'test@example.com', appPassword: 'abcd efgh ijkl mnop' }).smtp.appPassword, 'abcdefghijklmnop');
+  assert.throws(() =>
+    reduceState(state, 'smtp', { user: 'test@example.com', appPassword: 'short' }),
+  );
+  assert.equal(
+    reduceState(state, 'smtp', { user: 'test@example.com', appPassword: 'abcd efgh ijkl mnop' })
+      .smtp.appPassword,
+    'abcdefghijklmnop',
+  );
   assert.throws(() => normalizeState({ ...state, queue: { nextIndex: -1 } }));
   assert.throws(() => normalizeState({ ...state, profile: null }));
   assert.throws(() => reduceState(state, 'complete', workout(state, { skipped: true })));
