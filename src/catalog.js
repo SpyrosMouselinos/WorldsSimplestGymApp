@@ -1,0 +1,249 @@
+export const exercises = [
+  {
+    id: "chest-press",
+    name: "Chest press",
+    muscles: ["chest", "triceps"],
+    machine: "Chest press machine",
+    image: "chest-press.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.3
+  },
+  {
+    id: "pec-deck",
+    name: "Pec deck",
+    muscles: ["chest"],
+    machine: "Pec deck / fly machine",
+    image: "pec-deck.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.2
+  },
+  {
+    id: "tricep-pushdown",
+    name: "Tricep pushdown",
+    muscles: ["triceps"],
+    machine: "Cable stack",
+    image: "tricep-pushdown.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.15
+  },
+  {
+    id: "overhead-extension",
+    name: "Overhead extension",
+    muscles: ["triceps"],
+    machine: "Cable stack",
+    image: "overhead-extension.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.12
+  },
+  {
+    id: "leg-press",
+    name: "Leg press",
+    muscles: ["quads", "glutes"],
+    machine: "Leg press",
+    image: "leg-press.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.85
+  },
+  {
+    id: "hip-thrust",
+    name: "Hip thrust",
+    muscles: ["glutes", "hamstrings"],
+    machine: "Hip thrust / glute bridge machine",
+    image: "hip-thrust.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.4
+  },
+  {
+    id: "leg-curl",
+    name: "Leg curl",
+    muscles: ["hamstrings"],
+    machine: "Seated / lying leg curl",
+    image: "leg-curl.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.2
+  },
+  {
+    id: "cable-curl",
+    name: "Cable curl",
+    muscles: ["biceps"],
+    machine: "Cable stack",
+    image: "cable-curl.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.1
+  },
+  {
+    id: "cable-crunch",
+    name: "Cable crunch",
+    muscles: ["core"],
+    machine: "Cable stack",
+    image: "cable-crunch.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.15
+  },
+  {
+    id: "lat-pulldown",
+    name: "Lat pulldown",
+    muscles: ["back", "biceps"],
+    machine: "Lat pulldown",
+    image: "lat-pulldown.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.35
+  },
+  {
+    id: "seated-row",
+    name: "Seated row",
+    muscles: ["back"],
+    machine: "Seated row machine",
+    image: "seated-row.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.3
+  },
+  {
+    id: "shoulder-press",
+    name: "Shoulder press",
+    muscles: ["shoulders", "triceps"],
+    machine: "Shoulder press machine",
+    image: "shoulder-press.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.2
+  },
+  {
+    id: "lateral-raise",
+    name: "Lateral raise",
+    muscles: ["shoulders"],
+    machine: "Lateral raise machine",
+    image: "lateral-raise.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.08
+  },
+  {
+    id: "hip-abduction",
+    name: "Hip abduction",
+    muscles: ["glutes"],
+    machine: "Abductor machine",
+    image: "hip-abduction.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.22
+  },
+  {
+    id: "machine-crunch",
+    name: "Machine crunch",
+    muscles: ["core"],
+    machine: "Ab crunch machine",
+    image: "machine-crunch.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.16
+  },
+  {
+    id: "glute-kickback",
+    name: "Glute kickback",
+    muscles: ["glutes"],
+    machine: "Cable / kickback machine",
+    image: "glute-kickback.svg",
+    defaultSets: 3,
+    minReps: 8,
+    maxReps: 12,
+    bodyweightFactor: 0.12
+  }
+];
+const coupleSessions = [
+  {
+    id: "chest-tris",
+    name: "Chest + Triceps",
+    tagline: "One major push, then the small arm that already helped.",
+    exerciseIds: [
+      "chest-press",
+      "pec-deck",
+      "tricep-pushdown",
+      "overhead-extension",
+      "cable-crunch"
+    ]
+  },
+  {
+    id: "legs-bis",
+    name: "Legs + Biceps",
+    tagline: "Quads, a hinge, glutes, then curls — plus your core finisher.",
+    exerciseIds: ["leg-press", "hip-thrust", "leg-curl", "cable-curl", "cable-crunch"]
+  },
+  {
+    id: "back-shoulders",
+    name: "Back + Shoulders",
+    tagline: "A major pull, then delts. Core still closes the hour.",
+    exerciseIds: [
+      "lat-pulldown",
+      "seated-row",
+      "shoulder-press",
+      "lateral-raise",
+      "cable-crunch"
+    ]
+  }
+];
+const ullSessions = [
+  {
+    id: "upper",
+    name: "Upper",
+    tagline: "Chest, back, shoulders, and arms in one pass. Extra recovery before the next push.",
+    exerciseIds: [
+      "chest-press",
+      "lat-pulldown",
+      "shoulder-press",
+      "tricep-pushdown",
+      "cable-curl",
+      "cable-crunch"
+    ]
+  },
+  {
+    id: "lower",
+    name: "Lower",
+    tagline: "Quads, hamstrings, glutes, core. The first of two lower-body days.",
+    exerciseIds: ["leg-press", "hip-thrust", "leg-curl", "cable-crunch"]
+  },
+  {
+    id: "legs",
+    name: "Legs",
+    tagline: "Second lower day: more glute, abductor, and belly volume.",
+    exerciseIds: [
+      "hip-thrust",
+      "hip-abduction",
+      "glute-kickback",
+      "leg-press",
+      "machine-crunch"
+    ]
+  }
+];
+export function sessionsFor(program) {
+  return program === "ull" ? ullSessions : coupleSessions;
+}
+export function sessionById(program, sessionId) {
+  return sessionsFor(program).find((s) => s.id === sessionId);
+}
