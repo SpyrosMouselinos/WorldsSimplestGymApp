@@ -810,68 +810,6 @@ progress::-webkit-progress-value {
   display: grid;
   gap: 17px;
 }
-.rest-timer {
-  padding: 20px;
-  text-align: center;
-}
-.timer-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #655c67;
-}
-.timer-title .eyebrow {
-  font-size: 9px;
-  margin: 0;
-}
-.timer-value {
-  font-size: 52px;
-  font-weight: 450;
-  letter-spacing: -2px;
-  line-height: 1.2;
-  margin: 18px 0 5px;
-  font-variant-numeric: tabular-nums;
-  color: #685871;
-}
-.timer-value > span {
-  color: #625c67;
-}
-.rest-timer > .muted {
-  font-size: 10px;
-}
-.timer-presets {
-  display: flex;
-  border: 1px solid #e8e2dc;
-  border-radius: 8px;
-  padding: 3px;
-  margin: 17px 0 12px;
-  background: #f9f7f1;
-}
-.timer-presets button {
-  flex: 1;
-  background: transparent;
-  border: 0;
-  border-radius: 5px;
-  font-size: 10px;
-  padding: 5px;
-  color: #655c6a;
-}
-.timer-presets button[aria-pressed='true'] {
-  background: #e7e0ed;
-  color: var(--plum);
-}
-.rest-timer .actions {
-  justify-content: center;
-  gap: 6px;
-}
-.rest-timer .button {
-  min-height: 33px;
-  font-size: 10px;
-  padding: 7px 12px;
-}
-.rest-timer .text-button {
-  font-size: 10px;
-}
 .spotter-note {
   display: flex;
   align-items: center;
@@ -1812,7 +1750,6 @@ progress::-webkit-progress-value {
   .spotter-note p {
     font-size: 10px;
   }
-  .rest-timer,
   .next-note {
     padding: 17px;
   }
@@ -1979,9 +1916,6 @@ progress::-webkit-progress-value {
   }
   .workout-aside {
     grid-template-columns: 1fr 1fr;
-  }
-  .rest-timer {
-    grid-row: span 2;
   }
   .next-note {
     display: none;

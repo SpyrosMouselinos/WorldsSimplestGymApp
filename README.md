@@ -1,6 +1,6 @@
 # Worlds Simplest Gym
 
-A local Windows workout planner with two training cycles, an exercise guide, focused set logging, rest timers, progress history, portable backups, and optional Gmail workout emails. Version 1.1 adds the playful Little Wins Club interface; see [the professional pass](docs/PROFESSIONAL-PASS.md).
+A local Windows workout planner with two training cycles, an exercise guide, focused set logging, progress history, portable backups, and optional Gmail workout emails. Version 1.1 adds the playful Little Wins Club interface; see [the professional pass](docs/PROFESSIONAL-PASS.md).
 
 ## Run
 
@@ -17,14 +17,14 @@ Packaging reuses the installed Electron runtime from `node_modules/electron/dist
 
 ## Workout behavior
 
-The **Tutorial** button opens a replayable ten-lesson practice workout, also offered after setup. Practice weights, sets, timer, workout save/undo, flexible scheduling, muscle selection, history, and a pretend backup stay in memory and never alter real workout data or send email. Each lesson includes a reference explaining its controls; Back, Skip this step, and Escape let you navigate or leave at any point.
+The **Tutorial** button opens a replayable nine-lesson practice workout, also offered after setup. Practice weights, sets, workout save/undo, flexible scheduling, muscle selection, history, and a pretend backup stay in memory and never alter real workout data or send email. Each lesson includes a reference explaining its controls; Back, Skip this step, and Escape let you navigate or leave at any point.
 
 - Finish every set (or use Finish exercise), or explicitly skip an exercise before finishing the day.
 - Completing a workout advances the cycle. Skipping a whole day keeps the unfinished workout at the front for the next scheduled day.
 - Each date can contain one logged workout. Logged dates are excluded from future planning.
 - All completed sets reaching 12 reps adds 2.5 kg to the actual weight used. Otherwise the weight stays the same.
 - Skipped exercises return at their saved weight when their session returns. Program changes reset the queue while keeping lift weights and history.
-- Unfinished workout drafts and rest timers survive navigation and restart. Workout weights save when you leave the field or press Enter. Settings have explicit Save buttons.
+- Unfinished workout drafts survive navigation and restart. Workout weights save when you leave the field or press Enter. Settings have explicit Save buttons.
 - Review each workout before saving, and undo today's latest log from Today when you need to correct it.
 - Export and restore portable backups in Settings. Backups contain workout data, never email passwords; restoring requires a review.
 
@@ -40,7 +40,7 @@ Narmin's edition includes six hidden animal friends: tap the little paw prints t
 
 Desktop data lives in the Electron user-data folder, normally `%APPDATA%/Worlds Simplest Gym/gym-state.json`. This human-readable JSON holds profile, workout history, lift weights, queue, calendar settings, and encrypted email credentials. Each update to an existing file keeps its previous state in `gym-state.json.backup`; the main file is written atomically through electron-store. It loads automatically on launch. Invalid data is reported rather than silently reset. Close the app before manually replacing save files; use Settings to import an exported backup while the app is open.
 
-Draft sets, the rest timer, animal discoveries, and sound preferences use Electron's localStorage in its user-data folder. They are separate from portable workout backups. Browser preview uses localStorage for all data under that browser's exact origin; it does not share desktop data. No remote database or cloud sync is used.
+Draft sets, animal discoveries, and sound preferences use Electron's localStorage in its user-data folder. They are separate from portable workout backups. Browser preview uses localStorage for all data under that browser's exact origin; it does not share desktop data. No remote database or cloud sync is used.
 
 Optional email is under **Settings → Optional email**. Enter a Gmail account and a 16-character app password, then Save email settings. Send test saves the current email settings before sending. Credentials are encrypted using Windows credential storage; browser preview never saves email credentials. Connection and send attempts have timeouts. Delivery requires valid account credentials and connectivity.
 

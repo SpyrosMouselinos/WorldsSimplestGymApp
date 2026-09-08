@@ -47,10 +47,7 @@ try {
   await screenshot('today');
   await button('Increase weight').click();
   await button('Complete set 1').click();
-  await expect(button('Pause timer')).toBeVisible();
-  await button('Pause timer').click();
-  await button('60s').click();
-  await expect(page.getByRole('timer')).toHaveText('01:00');
+  await expect(page.getByRole('timer')).toHaveCount(0);
   await button('+ Add set').click();
   await expect(button('Complete set 4')).toBeVisible();
   await button('Remove last set').click();
@@ -82,7 +79,7 @@ try {
   await expect(button('Undo set 1')).toBeVisible();
   expect((await state()).schedule.flexible).toBe(true);
   expect((await state()).schedule.extraDates).toContain(extraStamp);
-  await expect(page.getByRole('timer')).toHaveText('01:00');
+  await expect(page.getByRole('timer')).toHaveCount(0);
   const tabs = page.getByRole('tab');
   for (let i = 0; i < (await tabs.count()); i++) {
     await tabs.nth(i).click();
@@ -182,7 +179,7 @@ try {
   expect(fs.existsSync(path.join(data, 'gym-state.json.backup'))).toBe(true);
   expect(errors).toEqual([]);
   console.log(
-    'PASS: onboarding, focus logging, rest timer, draft restart, skips, progression, review, undo, history, validation, encrypted email, backup export/restore, program switch, responsive layout and restart persistence. No email sent.',
+    'PASS: onboarding, focus logging, draft restart, skips, progression, review, undo, history, validation, encrypted email, backup export/restore, program switch, responsive layout and restart persistence. No email sent.',
   );
 } catch (error) {
   console.error(error);

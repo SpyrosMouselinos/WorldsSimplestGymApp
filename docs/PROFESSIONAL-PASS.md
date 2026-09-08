@@ -6,7 +6,7 @@ The professional pass is on `idea/professional-and-playful`.
 
 - A consistent visual system: cream surfaces, plum controls, clear hierarchy, a custom app icon, and a supportive bear mascot.
 - One exercise at a time, with persistent drafts, editable working weights, set controls, removable extra sets, and a review before saving.
-- A rest timer that survives navigation and restart. The timer measures an end time rather than relying on background ticks.
+- Workout logging at your own pace, without rest timers or countdowns.
 - An undo path for today's latest log, including its weight changes. Changing programs or manually changing a working weight invalidates undo to protect newer changes.
 - Progress charts and an expandable logbook based on recorded weights and reps. Older entries without per-set details remain visible.
 - Backup export without email credentials, validated import, and a review before replacing data. Restoring retains this device's email settings.

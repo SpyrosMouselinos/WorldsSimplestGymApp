@@ -47,8 +47,8 @@ try {
   );
   await button('Tutorial').click();
   const dialog = page.getByRole('dialog');
-  for (let step = 0; step < 10; step++) {
-    await expect(dialog.locator('.tutorial-meta')).toContainText(`${step + 1} / 10`);
+  for (let step = 0; step < 9; step++) {
+    await expect(dialog.locator('.tutorial-meta')).toContainText(`${step + 1} / 9`);
     if (step === 1) {
       await button('Increase practice weight').click();
     }
@@ -56,34 +56,30 @@ try {
       await button('Decrease practice reps').click();
       await button('Mark practice set done').click();
     }
+
     if (step === 3) {
-      await button('60s').click();
-      await button('Start practice timer').click();
-      await button('Pause practice timer').click();
-    }
-    if (step === 4) {
       await button('Save practice workout').click();
       await button('Undo practice log').click();
     }
-    if (step === 5) {
+    if (step === 4) {
       await page.getByLabel('Flexible scheduling', { exact: true }).check();
       await button('Skip practice Monday').click();
       await expect(dialog.locator('.tutorial-week')).toHaveText('Tue · Wed · Fri');
     }
-    if (step === 6) {
+    if (step === 5) {
       await button('Train practice Thursday').click();
       await button('Add optional Saturday').click();
       await expect(dialog.locator('.tutorial-week')).toContainText('Thu · Sat (optional)');
     }
-    if (step === 7) {
+    if (step === 6) {
       await dialog.getByRole('button', { name: 'Back', exact: true }).first().click();
       await dialog.locator('.body-muscle[aria-label="glutes"]').focus();
       await page.keyboard.press('Enter');
     }
-    if (step === 8) {
+    if (step === 7) {
       await dialog.locator('.tutorial-stage summary').click();
     }
-    if (step === 9) {
+    if (step === 8) {
       await button('Pretend to export a backup').click();
     }
     await dialog.locator('.tutorial-reference summary').click();
@@ -96,9 +92,9 @@ try {
       result.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })),
     ).toEqual([]);
     await dialog.locator('.tutorial-reference summary').click();
-    if (step === 5 && !process.env.GYM_TEST_EXECUTABLE)
+    if (step === 4 && !process.env.GYM_TEST_EXECUTABLE)
       await page.screenshot({ path: 'recovery/tutorial.png', timeout: 15000 });
-    await button(step === 9 ? 'Finish tutorial' : 'Next').click();
+    await button(step === 8 ? 'Finish tutorial' : 'Next').click();
   }
   await expect(dialog).toHaveCount(0);
   expect(await page.evaluate(() => window.gym.getState())).toEqual(saved);
@@ -114,7 +110,7 @@ try {
   await page.reload();
   await expect(page.locator('.tutorial-invite')).toHaveCount(0);
   await button('Tutorial').click();
-  await expect(page.getByRole('dialog').locator('.tutorial-meta')).toContainText('1 / 10');
+  await expect(page.getByRole('dialog').locator('.tutorial-meta')).toContainText('1 / 9');
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await button('Skip this step').click();
@@ -123,7 +119,7 @@ try {
   await expect(page.getByRole('dialog')).toHaveCount(0);
   expect(errors).toEqual([]);
   console.log(
-    'PASS: ten interactive lessons, control references, keyboard, replay, skip, mobile, accessibility, and unchanged workout/storage data.',
+    'PASS: nine interactive lessons, control references, keyboard, replay, skip, mobile, accessibility, and unchanged workout/storage data.',
   );
 } finally {
   await app.close();

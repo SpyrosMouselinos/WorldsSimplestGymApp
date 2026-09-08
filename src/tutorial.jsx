@@ -40,7 +40,7 @@ const lessons = [
       ['− / + beside reps', 'Record how many reps you actually completed.'],
       [
         'Set check / Undo set',
-        'Mark a set complete or reopen it. Completing a set starts the rest timer.',
+        'Mark a set complete or reopen it. Record your workout at your own pace.',
       ],
       [
         '+ Add set / Remove last set',
@@ -50,18 +50,6 @@ const lessons = [
         'Exercise tabs / Previous / Next exercise',
         'Choose an exercise. These navigation buttons do not mark it completed.',
       ],
-    ],
-  },
-  {
-    title: 'Take a little breather',
-    task: 'Try the 60-second preset, then start and pause this short demonstration.',
-    guide: [
-      [
-        '60s / 90s / 120s',
-        'Choose a rest duration. The real countdown continues across navigation and restart.',
-      ],
-      ['Start / Pause timer', 'Start or pause the countdown.'],
-      ['Reset', 'Return to the selected duration.'],
     ],
   },
   {
@@ -179,9 +167,6 @@ export function Tutorial({ onClose }) {
     [kg, setKg] = useState(20),
     [reps, setReps] = useState(12),
     [setDone, setSetDone] = useState(false);
-  const [seconds, setSeconds] = useState(90),
-    [running, setRunning] = useState(false),
-    [started, setStarted] = useState(false);
   const [saved, setSaved] = useState(false),
     [undone, setUndone] = useState(false),
     [flex, setFlex] = useState(false),
@@ -196,18 +181,11 @@ export function Tutorial({ onClose }) {
     lesson = lessons[step];
   useEffect(() => {
     heading.current?.focus();
-    setRunning(false);
   }, [step]);
-  useEffect(() => {
-    if (!running) return;
-    const timer = setInterval(() => setSeconds((value) => Math.max(0, value - 1)), 1000);
-    return () => clearInterval(timer);
-  }, [running]);
   const ready = [
     true,
     kg === 22.5,
     setDone && reps === 11,
-    started && !running,
     undone,
     skipped,
     early && extra,
@@ -284,39 +262,6 @@ export function Tutorial({ onClose }) {
           )}
           {step === 3 && (
             <>
-              <div className="tutorial-actions">
-                {[60, 90, 120].map((value) => (
-                  <Button
-                    key={value}
-                    variant="secondary"
-                    onClick={() => {
-                      setSeconds(value);
-                      setRunning(false);
-                      setStarted(false);
-                    }}
-                  >
-                    {value}s
-                  </Button>
-                ))}
-              </div>
-              <output className="tutorial-clock" aria-label="Practice countdown">
-                {String(Math.floor(seconds / 60)).padStart(2, '0')}:
-                {String(seconds % 60).padStart(2, '0')}
-              </output>
-              <div className="tutorial-actions">
-                <Button
-                  onClick={() => {
-                    setRunning(!running);
-                    setStarted(true);
-                  }}
-                >
-                  {running ? 'Pause practice timer' : 'Start practice timer'}
-                </Button>
-              </div>
-            </>
-          )}
-          {step === 4 && (
-            <>
               <p>
                 {saved
                   ? 'Workout saved in this rehearsal. Royal paws of approval!'
@@ -336,7 +281,7 @@ export function Tutorial({ onClose }) {
               </Button>
             </>
           )}
-          {step === 5 && (
+          {step === 4 && (
             <>
               <label className="tutorial-toggle">
                 <input
@@ -355,7 +300,7 @@ export function Tutorial({ onClose }) {
               </Button>
             </>
           )}
-          {step === 6 && (
+          {step === 5 && (
             <>
               <p className="tutorial-week">
                 Tue ✓ · Wed ✓ · {early ? 'Thu' : 'Fri'}
@@ -375,7 +320,7 @@ export function Tutorial({ onClose }) {
               </div>
             </>
           )}
-          {step === 7 && (
+          {step === 6 && (
             <>
               <div className="tutorial-actions">
                 {['front', 'back'].map((side) => (
@@ -395,7 +340,7 @@ export function Tutorial({ onClose }) {
               <AnatomyDiagram view={view} selected={muscle} onSelect={setMuscle} />
             </>
           )}
-          {step === 8 && (
+          {step === 7 && (
             <details
               onToggle={(event) => {
                 if (event.currentTarget.open) setHistory(true);
@@ -405,7 +350,7 @@ export function Tutorial({ onClose }) {
               <p>Chest press: 20 kg · 11 / 12 / 12 reps. No weight increase this time.</p>
             </details>
           )}
-          {step === 9 && (
+          {step === 8 && (
             <>
               <Button onClick={() => setBackup(true)}>Pretend to export a backup</Button>
               {backup && (

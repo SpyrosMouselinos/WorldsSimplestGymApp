@@ -47,11 +47,13 @@ function useToday() {
   const [today, setToday] = useState(isoDate());
   useEffect(() => {
     const update = () => setToday(isoDate());
-    const timer = setInterval(update, 1000);
     window.addEventListener('focus', update);
+    window.addEventListener('pointerdown', update);
+    window.addEventListener('keydown', update);
     return () => {
-      clearInterval(timer);
       window.removeEventListener('focus', update);
+      window.removeEventListener('pointerdown', update);
+      window.removeEventListener('keydown', update);
     };
   }, []);
   return today;
@@ -439,8 +441,7 @@ function Today({ state, onState, today, onProgress }) {
     [active, setActive] = useState(0),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
-    [confirm, setConfirm] = useState(null),
-    [restSignal, setRestSignal] = useState(0);
+    [confirm, setConfirm] = useState(null);
   const lock = useRef(false);
   const scheduled = upcoming(state, new Date(`${today}T12:00:00`), 1)[0]?.date === today;
   const canTrain = !todayEntry && (scheduled || state.schedule.trainingDates.includes(today));
@@ -746,7 +747,6 @@ function Today({ state, onState, today, onProgress }) {
                   (item) => item.exerciseId === exercise.id && item.sessionId === session.id,
                 )}
                 onChange={(log) => change(exercise.id, log)}
-                onSetDone={() => setRestSignal((value) => value + 1)}
                 previous={state.lifts[exercise.id]}
                 index={active}
                 total={total}
@@ -793,7 +793,7 @@ function Today({ state, onState, today, onProgress }) {
               </div>
             </div>
             <aside className="workout-aside">
-              <RestTimer signal={restSignal} />
+              <EasterEgg kind="frog" />
               <div className="spotter-note">
                 <Spotter happy={allWrapped} />
                 <div>
@@ -899,17 +899,7 @@ function Today({ state, onState, today, onProgress }) {
   );
 }
 
-function Exercise({
-  exercise,
-  log,
-  onChange,
-  onSetDone,
-  estimated,
-  replay,
-  previous,
-  index,
-  total,
-}) {
+function Exercise({ exercise, log, onChange, estimated, replay, previous, index, total }) {
   const [weight, setWeight] = useState(String(log.kg)),
     [error, setError] = useState('');
   useEffect(() => setWeight(String(log.kg)), [log.kg]);
@@ -930,7 +920,6 @@ function Exercise({
       skipped: false,
       sets: log.sets.map((set, i) => (i === index ? { ...set, ...patch } : set)),
     });
-    if (patch.done) onSetDone();
   }
   return (
     <section
@@ -1083,106 +1072,6 @@ function Exercise({
   );
 }
 
-function RestTimer({ signal }) {
-  const [timer, setTimer] = useState(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('gym-rest-v1'));
-      if (
-        saved &&
-        [60, 90, 120].includes(saved.duration) &&
-        Number.isFinite(saved.remaining) &&
-        (saved.end === null || Number.isFinite(saved.end))
-      )
-        return saved;
-    } catch {}
-    return { duration: 90, end: null, remaining: 90 };
-  });
-  const [now, setNow] = useState(Date.now());
-  const previousSignal = useRef(signal);
-  function update(next) {
-    localStorage.setItem('gym-rest-v1', JSON.stringify(next));
-    setNow(Date.now());
-    setTimer(next);
-  }
-  useEffect(() => {
-    if (signal !== previousSignal.current) {
-      previousSignal.current = signal;
-      update({
-        duration: timer.duration,
-        end: Date.now() + timer.duration * 1000,
-        remaining: timer.duration,
-      });
-    }
-  }, [signal]);
-  useEffect(() => {
-    const tick = setInterval(() => setNow(Date.now()), 250);
-    return () => clearInterval(tick);
-  }, []);
-  const remaining = timer.end ? Math.max(0, Math.ceil((timer.end - now) / 1000)) : timer.remaining;
-  const running = !!timer.end && remaining > 0;
-  return (
-    <section className="panel rest-timer">
-      <div className="timer-title">
-        <span className="eyebrow">A LITTLE BREATHER</span>
-        <Icon name="clock" />
-      </div>
-      <div className="timer-value" role="timer" aria-label="Rest timer">
-        {String(Math.floor(remaining / 60)).padStart(2, '0')}
-        <span>:</span>
-        {String(remaining % 60).padStart(2, '0')}
-      </div>
-      <p className="muted">
-        {remaining === 0
-          ? 'Ready when you are. No rush.'
-          : running
-            ? 'Resting is part of the work.'
-            : 'Starts when you mark a set done.'}
-      </p>
-      <div className="timer-presets">
-        {[60, 90, 120].map((seconds) => (
-          <button
-            key={seconds}
-            aria-pressed={timer.duration === seconds}
-            onClick={() =>
-              update({
-                duration: seconds,
-                remaining: seconds,
-                end: running ? Date.now() + seconds * 1000 : null,
-              })
-            }
-          >
-            {seconds}s
-          </button>
-        ))}
-      </div>
-      <div className="actions">
-        <Button
-          variant="secondary"
-          onClick={() =>
-            update(
-              running
-                ? { ...timer, remaining, end: null }
-                : {
-                    ...timer,
-                    remaining: remaining || timer.duration,
-                    end: Date.now() + (remaining || timer.duration) * 1000,
-                  },
-            )
-          }
-        >
-          {running ? 'Pause timer' : 'Start timer'}
-        </Button>
-        <button
-          className="text-button"
-          onClick={() => update({ ...timer, end: null, remaining: timer.duration })}
-        >
-          Reset
-        </button>
-      </div>
-      <EasterEgg kind="frog" />
-    </section>
-  );
-}
 function Schedule({ schedule }) {
   return (
     <aside className="panel schedule">
