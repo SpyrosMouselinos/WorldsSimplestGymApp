@@ -17,6 +17,8 @@ Packaging reuses the installed Electron runtime from `node_modules/electron/dist
 
 ## Workout behavior
 
+The **Tutorial** button opens a replayable ten-lesson practice workout, also offered after setup. Practice weights, sets, timer, workout save/undo, flexible scheduling, muscle selection, history, and a pretend backup stay in memory and never alter real workout data or send email. Each lesson includes a reference explaining its controls; Back, Skip this step, and Escape let you navigate or leave at any point.
+
 - Finish every set (or use Finish exercise), or explicitly skip an exercise before finishing the day.
 - Completing a workout advances the cycle. Skipping a whole day keeps the unfinished workout at the front for the next scheduled day.
 - Each date can contain one logged workout. Logged dates are excluded from future planning.

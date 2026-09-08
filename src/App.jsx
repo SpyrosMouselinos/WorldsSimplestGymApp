@@ -23,6 +23,7 @@ import { playBark, prepareBark } from './bark.js';
 import { MachineIllustration } from './illustrations.js';
 import { AnatomyDiagram } from './anatomy.jsx';
 import { WeekPlanner } from './week-planner.jsx';
+import { Tutorial } from './tutorial.jsx';
 import './professional.css';
 
 const api = window.gym;
@@ -71,12 +72,17 @@ function loadDraft(state) {
     return createDraft(state);
   }
 }
-function TitleBar() {
+function TitleBar({ onTutorial }) {
   return (
     <header className="window-bar">
       <span>
         <span className="status-dot" /> Worlds Simplest Gym{' '}
         <span className="edition">/ Narmin’s little wins club</span>
+        {onTutorial && (
+          <button type="button" className="tutorial-launch" onClick={onTutorial}>
+            Tutorial
+          </button>
+        )}
       </span>
       {!document.documentElement.dataset.browser && (
         <div className="window-actions">
@@ -107,6 +113,20 @@ function ScreenHeading({ eyebrow, title, description, children }) {
   );
 }
 function App() {
+  const [tutorial, setTutorial] = useState(false);
+  const [offerTutorial, setOfferTutorial] = useState(() => {
+    try {
+      return localStorage.getItem('gym-tutorial-offer-v1') !== 'seen';
+    } catch {
+      return true;
+    }
+  });
+  const dismissTutorialOffer = () => {
+    setOfferTutorial(false);
+    try {
+      localStorage.setItem('gym-tutorial-offer-v1', 'seen');
+    } catch {}
+  };
   const [state, setState] = useState(null),
     [error, setError] = useState(''),
     [screen, setScreen] = useState('today');
@@ -121,7 +141,7 @@ function App() {
   useEffect(reload, []);
   return (
     <div className="gym-app">
-      <TitleBar />
+      <TitleBar onTutorial={() => setTutorial(true)} />
       {error ? (
         <main className="opening">
           <Spotter />
@@ -203,6 +223,19 @@ function App() {
             id="main-content"
             className={`workspace ${screen === 'today' ? 'workout-workspace' : ''}`}
           >
+            {offerTutorial && (
+              <div className="tutorial-invite">
+                <p>
+                  <strong>New here?</strong> Try a short practice workout and learn the buttons.
+                </p>
+                <Button variant="secondary" onClick={() => setTutorial(true)}>
+                  Start tutorial
+                </Button>
+                <button type="button" className="text-button" onClick={dismissTutorialOffer}>
+                  Not now
+                </button>
+              </div>
+            )}
             {screen === 'today' && (
               <Today
                 key={`${draftKey(state)}:${today}:${!!state.history.find((entry) => entry.date === today)}`}
@@ -218,6 +251,14 @@ function App() {
             {screen === 'settings' && <Settings state={state} onState={setState} />}
           </main>
         </div>
+      )}
+      {tutorial && (
+        <Tutorial
+          onClose={() => {
+            setTutorial(false);
+            dismissTutorialOffer();
+          }}
+        />
       )}
     </div>
   );

@@ -1,0 +1,151 @@
+.tutorial-launch {
+  -webkit-app-region: no-drag;
+  margin-left: 12px;
+  border: 1px solid #d7cadd;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: #594361;
+  background: #fffafc;
+  cursor: pointer;
+}
+.tutorial-invite {
+  border: 1px solid #d8cbe1;
+  background: #f0e8f5;
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.tutorial-invite p {
+  flex: 1;
+  font-size: 13px;
+  min-width: 180px;
+}
+.tutorial-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #65516f;
+  font-size: 10px;
+  letter-spacing: 0.6px;
+}
+.tutorial progress {
+  width: 100%;
+  height: 6px;
+  accent-color: #795781;
+  margin: 10px 0 16px;
+}
+.tutorial h3 {
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+.tutorial h3:focus {
+  outline: none;
+}
+.tutorial > p {
+  font-size: 13px;
+  line-height: 1.65;
+}
+.tutorial-stage {
+  background: #f7f2f8;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 18px 0;
+  text-align: center;
+  font-size: 13px;
+}
+.tutorial-stage > .spotter {
+  display: block;
+  width: 100px;
+  margin: auto auto 12px;
+}
+.tutorial-stage p {
+  margin: 12px 0;
+}
+.tutorial-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tutorial-actions output {
+  font-weight: 700;
+  min-width: 55px;
+  font-size: 20px;
+}
+.tutorial-clock {
+  display: block;
+  margin: 15px;
+  font-size: 34px;
+  font-variant-numeric: tabular-nums;
+}
+.tutorial-week {
+  font-size: 19px;
+  font-weight: 600;
+}
+.tutorial-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.tutorial-toggle input {
+  width: 20px;
+  height: 20px;
+  accent-color: #795781;
+}
+.tutorial-result {
+  color: #60536a;
+  min-height: 22px;
+}
+.tutorial-reference {
+  margin: 14px 0;
+  border-top: 1px solid #ddd1e2;
+  padding-top: 14px;
+}
+.tutorial summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 0;
+}
+.tutorial dt {
+  margin-top: 14px;
+  font-weight: 650;
+  font-size: 12px;
+}
+.tutorial dd {
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #665970;
+}
+.tutorial-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 16px;
+}
+.tutorial-stage .body-map-svg {
+  height: 290px;
+}
+@media (max-width: 600px) {
+  .tutorial-footer {
+    flex-wrap: wrap;
+  }
+  .tutorial-meta {
+    font-size: 9px;
+  }
+  .tutorial-stage {
+    padding: 14px;
+  }
+  .tutorial-launch {
+    margin-left: 6px;
+  }
+}
