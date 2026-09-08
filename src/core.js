@@ -1,4 +1,5 @@
 import { exercises, sessionsFor } from './catalog.js';
+import { emptySchedule, validateSchedule, plannedDates, shiftDate } from './schedule.js';
 
 export const emptyState = () => ({
   onboardingComplete: false,
@@ -7,6 +8,7 @@ export const emptyState = () => ({
   queue: { nextIndex: 0, pendingMakeups: [] },
   lifts: {},
   history: [],
+  schedule: emptySchedule(),
 });
 export function isoDate(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -82,6 +84,7 @@ export function normalizeState(raw) {
     'Saved data is invalid. Restore a backup.',
   );
   const state = { ...emptyState(), ...raw };
+  state.schedule = validateSchedule(state.schedule);
   if (state.onboardingComplete) state.profile = validateProfile(state.profile);
   state.queue = { ...emptyState().queue, ...state.queue };
   requireThat(
@@ -170,6 +173,72 @@ export function reduceState(input, action, payload, date = isoDate()) {
     };
   }
   requireThat(state.onboardingComplete, 'Finish setup first.');
+  if (action === 'schedule') {
+    requireThat(payload && typeof payload.flexible === 'boolean', 'Choose a scheduling mode.');
+    return { ...state, schedule: { ...state.schedule, flexible: payload.flexible } };
+  }
+  if (action === 'train-today') {
+    requireThat(
+      !state.history.some((entry) => entry.date === date),
+      'Today is already logged. Undo the log first.',
+    );
+    return {
+      ...state,
+      schedule: validateSchedule({
+        ...state.schedule,
+        trainingDates: [...state.schedule.trainingDates, date],
+      }),
+    };
+  }
+  if (action === 'cancel-training') {
+    requireThat(
+      !state.history.some((entry) => entry.date === date),
+      'Today is already logged. Undo the log first.',
+    );
+    return {
+      ...state,
+      schedule: {
+        ...state.schedule,
+        trainingDates: state.schedule.trainingDates.filter((day) => day !== date),
+      },
+    };
+  }
+  if (action === 'extra-day') {
+    const settings = validateSchedule({ ...state.schedule, extraDates: [payload?.date] });
+    const extra = settings.extraDates[0];
+    requireThat(
+      extra >= date && extra <= shiftDate(date, 90),
+      'Choose an extra day within the next 90 days.',
+    );
+    requireThat(
+      !state.history.some((entry) => entry.date === extra),
+      'That day is already logged.',
+    );
+    requireThat(
+      !plannedDates(state, date, 100).some((slot) => slot.date === extra),
+      'That day is already planned.',
+    );
+    return {
+      ...state,
+      schedule: validateSchedule({
+        ...state.schedule,
+        extraDates: [...state.schedule.extraDates, extra],
+      }),
+    };
+  }
+  if (action === 'remove-extra') {
+    requireThat(
+      payload?.date >= date && !state.history.some((entry) => entry.date === payload.date),
+      'Only an upcoming extra day can be removed.',
+    );
+    return {
+      ...state,
+      schedule: {
+        ...state.schedule,
+        extraDates: state.schedule.extraDates.filter((day) => day !== payload.date),
+      },
+    };
+  }
   if (action === 'undo-session') {
     const latest = state.history[0];
     requireThat(

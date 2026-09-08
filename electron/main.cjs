@@ -98,6 +98,11 @@ else
         'complete',
         'skip-session',
         'undo-session',
+        'schedule',
+        'train-today',
+        'cancel-training',
+        'extra-day',
+        'remove-extra',
       ]) {
         handle(`store:${action}`, (payload) =>
           writeState(core.reduceState(readState(), action, payload)),

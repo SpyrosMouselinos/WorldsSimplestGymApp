@@ -1485,8 +1485,7 @@ progress::-webkit-progress-value {
   padding: 25px;
 }
 .anatomy-image {
-  height: 520px;
-  max-height: 60vh;
+  height: auto;
   margin: 15px 0;
 }
 .anatomy-image > div {
@@ -2149,36 +2148,4 @@ progress::-webkit-progress-value {
     transition: none !important;
     scroll-behavior: auto !important;
   }
-}
-.anatomy-stage {
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-.anatomy-stage > img {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
-}
-.anatomy-stage > svg {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  width: 100%;
-}
-.muscle-region {
-  fill: transparent;
-  stroke: transparent;
-  cursor: pointer;
-}
-.muscle-region:hover,
-.muscle-region:focus-visible {
-  fill: #d4788a30;
-  stroke: #d4788a;
-  stroke-width: 2;
-}
-.muscle-region.selected {
-  fill: #ad74c24d;
-  stroke: #9861a9;
-  stroke-width: 2;
 }

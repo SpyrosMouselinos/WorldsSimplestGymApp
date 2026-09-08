@@ -1,0 +1,45 @@
+.body-map {
+  width: 100%;
+  max-width: 360px;
+  margin: 18px auto 0;
+}
+.body-map-svg {
+  display: block;
+  width: 100%;
+  height: clamp(340px, 55vh, 520px);
+}
+.body-muscle {
+  fill: #cba6b8;
+  cursor: pointer;
+  transition: fill 0.15s;
+  outline: none;
+}
+.body-muscle:hover {
+  fill: #ad7a99;
+}
+.body-muscle.selected {
+  fill: #795781;
+}
+.body-muscle:focus-visible {
+  fill: #63416d;
+  filter: drop-shadow(0 0 3px #63416d);
+}
+.body-map-caption {
+  font-size: 12px;
+  color: #62516b;
+  text-align: center;
+  margin: 16px 0;
+}
+.muscle-key {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #795781;
+  margin-right: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .body-muscle {
+    transition: none;
+  }
+}

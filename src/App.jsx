@@ -20,7 +20,9 @@ import {
 import { Icon, Spotter, Button, Field, Modal, Message } from './ui.jsx';
 import { AnimalSettings, DayAnimal, EasterEgg } from './animals.jsx';
 import { playBark, prepareBark } from './bark.js';
-import { AnatomyDiagram, MachineIllustration } from './illustrations.js';
+import { MachineIllustration } from './illustrations.js';
+import { AnatomyDiagram } from './anatomy.jsx';
+import { WeekPlanner } from './week-planner.jsx';
 import './professional.css';
 
 const api = window.gym;
@@ -397,11 +399,10 @@ function Today({ state, onState, today, onProgress }) {
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false),
     [confirm, setConfirm] = useState(null),
-    [trainAnyway, setTrainAnyway] = useState(false),
     [restSignal, setRestSignal] = useState(0);
   const lock = useRef(false);
-  const scheduled = state.profile.gymDays.includes(new Date(`${today}T12:00:00`).getDay());
-  const canTrain = !todayEntry && (scheduled || trainAnyway);
+  const scheduled = upcoming(state, new Date(`${today}T12:00:00`), 1)[0]?.date === today;
+  const canTrain = !todayEntry && (scheduled || state.schedule.trainingDates.includes(today));
   const completed = Object.values(draft).filter(wrapped).length,
     total = session.exerciseIds.length;
   const exercise = exercises.find((ex) => ex.id === session.exerciseIds[active]);
@@ -560,6 +561,7 @@ function Today({ state, onState, today, onProgress }) {
           <span className="status-dot" /> All changes saved locally
         </span>
       </ScreenHeading>
+      <WeekPlanner state={state} onState={onState} today={today} />
       <EasterEgg kind="cat" />
       <Message error>{error}</Message>
       {todayEntry ? (
@@ -613,9 +615,34 @@ function Today({ state, onState, today, onProgress }) {
               {schedule[0] ? ` on ${formatDay(schedule[0].date)}` : ''}. The queue is right where
               you left it.
             </p>
-            <Button onClick={() => setTrainAnyway(true)}>
+            <Button
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                setError('');
+                try {
+                  onState(await api.trainToday());
+                } catch (error) {
+                  setError(cleanError(error));
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
               I’m training today <Icon name="arrow" />
             </Button>
+            <p className="help">
+              {state.schedule.flexible &&
+              schedule[0] &&
+              schedule[0].date <=
+                (() => {
+                  const d = new Date(`${today}T12:00:00`);
+                  d.setDate(d.getDate() + ((7 - d.getDay()) % 7));
+                  return isoDate(d);
+                })()
+                ? `This replaces ${formatDay(schedule[0].date)}. You can add an optional extra day in This week.`
+                : 'Your workout order stays the same. You can adjust this week’s days above.'}
+            </p>
           </section>
           <Schedule schedule={schedule} />
         </div>
@@ -1128,7 +1155,9 @@ function Schedule({ schedule }) {
               <strong>{item.session.name}</strong>
               <small>{formatDay(item.date)}</small>
             </div>
-            {index === 0 && <span className="pill">Next</span>}
+            {(item.optional || index === 0) && (
+              <span className="pill">{item.optional ? 'Extra' : 'Next'}</span>
+            )}
           </li>
         ))}
       </ul>
@@ -1351,6 +1380,7 @@ function Program({ state, onState }) {
           </section>
         ))}
       </div>
+      <WeekPlanner state={state} onState={onState} expanded />
       <Schedule schedule={upcoming(state)} />
       <EasterEgg kind="raccoon" />
       {choice && (
@@ -1423,7 +1453,9 @@ function Learn() {
           <div className="anatomy-image">
             <AnatomyDiagram view={view} selected={muscle} onSelect={selectMuscle} />
           </div>
-          <p className="help">Muscle plates: OpenStax, Anatomy and Physiology · CC BY 4.0.</p>
+          <p className="help">
+            A simplified muscle guide. Select a region to explore its exercises.
+          </p>
         </section>
         <section>
           <div className="muscle-picker">

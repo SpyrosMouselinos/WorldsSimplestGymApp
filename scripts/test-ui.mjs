@@ -59,23 +59,29 @@ try {
   await expect(
     page.getByRole('heading', { name: 'Meet the muscles. Meet the machines.' }),
   ).toBeVisible();
-  await expect
-    .poll(() =>
-      page
-        .locator('img')
-        .evaluateAll(
-          (images) =>
-            images.length > 0 && images.every((img) => img.complete && img.naturalWidth > 0),
-        ),
-    )
-    .toBe(true);
+  await expect(page.locator('.body-map-svg')).toBeVisible();
+  await expect(page.locator('.body-muscle')).toHaveCount(6);
   await button('back').first().click();
   await screenshot('learn');
+  await button('Program').click();
+  await page.getByLabel('Automatically rebalance my week').click();
+  await expect(page.getByLabel('Automatically rebalance my week')).toBeChecked();
+  await expect.poll(async () => (await state()).schedule.flexible).toBe(true);
+  const extraDay = new Date();
+  extraDay.setDate(extraDay.getDate() + 8);
+  const gymDays = (await state()).profile.gymDays;
+  while (gymDays.includes(extraDay.getDay())) extraDay.setDate(extraDay.getDate() + 1);
+  const extraStamp = `${extraDay.getFullYear()}-${String(extraDay.getMonth() + 1).padStart(2, '0')}-${String(extraDay.getDate()).padStart(2, '0')}`;
+  await page.getByLabel('Optional extra day', { exact: true }).fill(extraStamp);
+  await button('Add extra day').click();
+  await expect.poll(async () => (await state()).schedule.extraDates).toContain(extraStamp);
   await button('Today').click();
   await expect(button('Undo set 1')).toBeVisible();
   await app.close();
   await launch();
   await expect(button('Undo set 1')).toBeVisible();
+  expect((await state()).schedule.flexible).toBe(true);
+  expect((await state()).schedule.extraDates).toContain(extraStamp);
   await expect(page.getByRole('timer')).toHaveText('01:00');
   const tabs = page.getByRole('tab');
   for (let i = 0; i < (await tabs.count()); i++) {
@@ -138,16 +144,16 @@ try {
     })
     .toBe(1);
   const backup = JSON.parse(fs.readFileSync(backupFile, 'utf8'));
+  expect(backup.state.schedule.flexible).toBe(true);
+  expect(backup.state.schedule.extraDates).toContain(extraStamp);
   expect(backup.state.smtp).toBeNull();
   expect(JSON.stringify(backup)).not.toContain('abcdefghijklmnop');
   expect(backup.state.history).toHaveLength(1);
-  await page
-    .getByLabel('Backup file')
-    .setInputFiles({
-      name: 'broken.json',
-      mimeType: 'application/json',
-      buffer: Buffer.from('{"version":99}'),
-    });
+  await page.getByLabel('Backup file').setInputFiles({
+    name: 'broken.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{"version":99}'),
+  });
   await expect(page.getByRole('alert')).toContainText('not a supported gym backup');
   expect((await state()).history).toHaveLength(1);
   await page.getByLabel('Backup file').setInputFiles(backupFile);

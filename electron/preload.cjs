@@ -1,6 +1,11 @@
 'use strict';
 const electron = require('electron');
 const gym = {
+  updateSchedule: (payload) => electron.ipcRenderer.invoke('store:schedule', payload),
+  trainToday: () => electron.ipcRenderer.invoke('store:train-today'),
+  cancelTraining: () => electron.ipcRenderer.invoke('store:cancel-training'),
+  addExtraDay: (date) => electron.ipcRenderer.invoke('store:extra-day', { date }),
+  removeExtraDay: (date) => electron.ipcRenderer.invoke('store:remove-extra', { date }),
   undoSession: () => electron.ipcRenderer.invoke('store:undo-session'),
   restoreBackup: (payload) => electron.ipcRenderer.invoke('store:restore', payload),
   getState: () => electron.ipcRenderer.invoke('store:get'),

@@ -1,7 +1,7 @@
 {
   "name": "worlds-simplest-gym",
   "productName": "Worlds Simplest Gym",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "description": "A local gym planner with workout logging and progression.",
@@ -33,6 +33,7 @@
     "vite": "^8.2.2"
   },
   "build": {
+    "electronDist": "node_modules/electron/dist",
     "appId": "com.worldssimplestgym.app",
     "productName": "Worlds Simplest Gym",
     "directories": {
@@ -44,6 +45,7 @@
       "src/core.js",
       "src/catalog.js",
       "src/planner.js",
+      "src/schedule.js",
       "package.json"
     ],
     "win": {

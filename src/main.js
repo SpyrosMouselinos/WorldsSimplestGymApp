@@ -50,6 +50,11 @@ if (!window.gym) {
     return state;
   };
   window.gym = {
+    updateSchedule: (payload) => change('schedule', payload),
+    trainToday: () => change('train-today'),
+    cancelTraining: () => change('cancel-training'),
+    addExtraDay: (date) => change('extra-day', { date }),
+    removeExtraDay: (date) => change('remove-extra', { date }),
     undoSession: () => change('undo-session'),
     restoreBackup: async (payload) => {
       const state = parseBackup(payload);

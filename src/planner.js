@@ -1,5 +1,6 @@
 import { exercises, sessionsFor } from './catalog.js';
 import { isoDate, normalizeState } from './core.js';
+import { plannedDates } from './schedule.js';
 
 export const programNames = { couple: 'Major + minor', ull: 'Upper / Lower / Legs' };
 export const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -8,22 +9,11 @@ export function nextSession(state) {
   return sessions[state.queue.nextIndex % sessions.length];
 }
 export function upcoming(state, from = new Date(), count = 6) {
-  const dates = [],
-    cursor = new Date(from.getFullYear(), from.getMonth(), from.getDate());
-  const logged = new Set(state.history.map((entry) => entry.date));
   const sessions = sessionsFor(state.profile.program);
-  for (
-    let offset = 0;
-    dates.length < count && offset < 730;
-    offset++, cursor.setDate(cursor.getDate() + 1)
-  ) {
-    if (state.profile.gymDays.includes(cursor.getDay()) && !logged.has(isoDate(cursor)))
-      dates.push({
-        date: isoDate(cursor),
-        session: sessions[(state.queue.nextIndex + dates.length) % sessions.length],
-      });
-  }
-  return dates;
+  return plannedDates(state, isoDate(from), count).map((slot, index) => ({
+    ...slot,
+    session: sessions[(state.queue.nextIndex + index) % sessions.length],
+  }));
 }
 export function formatDay(stamp, options = { weekday: 'short', month: 'short', day: 'numeric' }) {
   return new Date(`${stamp}T12:00:00`).toLocaleDateString(undefined, options);
@@ -105,12 +95,13 @@ export function liftHistory(history, exerciseId) {
     .reverse();
 }
 export function createBackup(state) {
-  const { onboardingComplete, startedOn, profile, queue, lifts, history } = normalizeState(state);
+  const { onboardingComplete, startedOn, profile, queue, lifts, history, schedule } =
+    normalizeState(state);
   return {
     format: 'worlds-simplest-gym',
     version: 1,
     exportedAt: new Date().toISOString(),
-    state: { onboardingComplete, startedOn, profile, queue, lifts, history, smtp: null },
+    state: { onboardingComplete, startedOn, profile, queue, lifts, history, schedule, smtp: null },
   };
 }
 export function parseBackup(value) {
